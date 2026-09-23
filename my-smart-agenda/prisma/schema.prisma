@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum EntryType {
+  TASK
+  EVENT
+  NOTE
+  HABIT
+  REMINDER
+}
+
+enum EntryStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Entry {
+  id        String      @id @default(uuid())
+  title     String
+  stime     String      @default("00:00")
+  etime     String      @default("00:05")
+  notes     String?
+  type      EntryType   @default(TASK)
+  status    EntryStatus @default(TODO)
+  tag       String?
+  startDate DateTime?
+  dueDate   DateTime?
+  priority  Priority    @default(MEDIUM)
+  isDeleted Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}

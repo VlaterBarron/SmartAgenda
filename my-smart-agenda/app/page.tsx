@@ -1,3 +1,8 @@
+import { fetchEntries } from "@/lib/data"
+import { EntryCard } from "@/components/ui/EntryCard"
+
+const entries = await fetchEntries();
+
 export default function Home() {
   return (
     <div>
@@ -5,6 +10,13 @@ export default function Home() {
       <p className="mt-2 text-muted-foreground">
         Your entries will show up here.
       </p>
+      <ul>
+        {
+          entries.map(e => (
+            <EntryCard key={e.id} {...e} />
+          ))
+        }
+      </ul>
     </div>
   )
 }
