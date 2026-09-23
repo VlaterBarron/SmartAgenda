@@ -30,11 +30,22 @@ enum Priority {
   HIGH
 }
 
+enum Weekday {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}
+
 model Entry {
   id        String      @id @default(uuid())
   title     String
   stime     String      @default("00:00")
   etime     String      @default("00:05")
+  weekdays  Weekday[]   @default([])
   notes     String?
   type      EntryType   @default(TASK)
   status    EntryStatus @default(TODO)
