@@ -1,6 +1,6 @@
-import type { Entry } from "@/lib/generated/prisma/client"
-import type { Weekday } from "@/lib/generated/prisma/enums"
-import { EntryCard } from "@/components/ui/EntryCard"
+import type { Entry } from "@/src/lib/generated/prisma/client";
+import type { Weekday } from "@/src/lib/generated/prisma/enums";
+import { EntryCard } from "@/src/app/components/ui/EntryCard";
 
 const formatWeekday = (weekday: Weekday) =>
     weekday.charAt(0) + weekday.slice(1).toLowerCase()

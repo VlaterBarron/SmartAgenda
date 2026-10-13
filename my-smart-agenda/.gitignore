@@ -51,3 +51,5 @@ dist/
 .agents
 .claude
 .windsurf
+
+claude-health-scan/
