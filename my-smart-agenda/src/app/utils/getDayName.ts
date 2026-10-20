@@ -1,4 +1,4 @@
-import { Weekday } from "@/src/lib/generated/prisma/enums";
+import { Weekday } from "@/lib/generated/prisma/enums";
 
 export const getDayName = (day: number): Weekday => {
     switch(day) {

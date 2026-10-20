@@ -1,4 +1,4 @@
-import type { Entry } from "@/src/lib/generated/prisma/client";
+import type { Entry } from "@/lib/generated/prisma/client";
 import { Card, CardContent } from "@/src/app/components/ui/card";
 
 export const EntryCard = (entry: Entry) => {
