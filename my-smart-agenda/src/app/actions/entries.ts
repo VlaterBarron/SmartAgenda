@@ -29,3 +29,9 @@ export const upsertEntry = async (title:string, stime:string, etime:string, week
     refresh();
     return entry;
 }
+
+export const deleteEntry = async (id:string) => {
+    const entry = await prisma.entry.delete({ where: { id : id } });
+    refresh();
+    return entry;
+}

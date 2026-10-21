@@ -1,23 +1,6 @@
 import type { Entry } from "@/lib/generated/prisma/client";
 import { Card, CardContent } from "@/src/app/components/ui/card";
-
-/*const updateEntry: (id: string, title: string, stime: string, etime: string, weekdays: Weekday[]) => Promise<{
-    id: string;
-    title: string;
-    stime: string;
-    etime: string;
-    weekdays: Weekday[];
-    notes: string | null;
-    type: EntryType;
-    status: EntryStatus;
-    tag: string | null;
-    startDate: Date | null;
-    dueDate: Date | null;
-    priority: Priority;
-    isDeleted: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-}>*/
+import { deleteEntry } from "../../actions/entries";
 
 export const EntryCard = ({entry, open}: {
     entry: Entry;
@@ -33,12 +16,20 @@ export const EntryCard = ({entry, open}: {
                 <span className="truncate text-sm font-medium text-card-foreground">
                     {entry.title}
                 </span>
-                <button 
+                <div className="ml-auto flex gap-2">
+                    <button 
                     onClick={() => open()}
-                    className="ml-auto bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-3 py-1 rounded-md text-sm"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md"
                 >
                     Update Entry
                 </button>
+                <button 
+                    onClick={() => deleteEntry(entry.id)}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90 h-10 px-4 py-2 rounded-md"
+                >
+                    Delete Entry
+                </button>
+                </div>
             </CardContent>
         </Card>
     )
