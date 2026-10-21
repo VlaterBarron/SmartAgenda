@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { refresh } from 'next/cache';
 
 export const getEntries = async (weekday:Weekday) : Promise<Entry[]> => {
-    return (await prisma.entry.findMany()).filter(e => !e.isDeleted && e.weekdays.includes(weekday));
+    return (await prisma.entry.findMany()).filter(e => !e.isDeleted && e.weekdays.includes(weekday)).sort((a, b) => a.stime.localeCompare(b.stime));
 }
 
 export const upsertEntry = async (title:string, stime:string, etime:string, weekdays: Weekday[], id?:string, ) => {
