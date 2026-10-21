@@ -12,6 +12,7 @@ const formatWeekday = (weekday: Weekday) =>
 export const Dashboard = ({ weekday, entries }: { weekday: Weekday; entries: Entry[] }) => {
     
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isUpdateModalOpen, setUpdateModalOpen] = useState<Entry | null>(null);
     
     return (
         <section className="flex flex-col gap-4">
@@ -43,12 +44,13 @@ export const Dashboard = ({ weekday, entries }: { weekday: Weekday; entries: Ent
                 <ul className="flex flex-col gap-2">
                     {entries.map(entry => (
                         <li key={entry.id}>
-                            <EntryCard {...entry} />
+                            <EntryCard entry={entry} open={() => setUpdateModalOpen(entry)} />
                         </li>
                     ))}
                 </ul>
             )}
-            {isModalOpen && <Model onClose={() => setIsModalOpen(false)} />}
+            {isModalOpen && <Model onClose={() => setIsModalOpen(false)}/>}
+            {isUpdateModalOpen && <Model onClose={() => setUpdateModalOpen(null)} entry={isUpdateModalOpen} />}
         </section>
     )
 }

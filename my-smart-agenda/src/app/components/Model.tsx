@@ -3,17 +3,21 @@
 import { useState } from "react";
 import { StringToWeekday } from "@/src/app/utils/StringToWeekday";
 import type { Weekday } from '@/lib/generated/prisma/enums';
-import { createEntry } from "@/src/app/actions/entries";
+import { upsertEntry } from "@/src/app/actions/entries";
+import { Entry } from "@/lib/generated/prisma/browser";
 
-export const Model = ({ onClose }: { onClose: () => void }) => {
+export const Model = ({ onClose, entry }: { 
+    onClose: () => void; 
+    entry?: Entry;
+}) => {
     
     const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     const [form, setForm] = useState({
-        title: '',
-        stime: '00:00',
-        etime: '00:05',
-        weekdays: [] as Weekday[],
+        title: entry ? entry.title : '',
+        stime: entry ? entry.stime : '00:00',
+        etime: entry ? entry.etime : '00:05',
+        weekdays: entry ? entry.weekdays : [] as Weekday[],
     });
 
     return (
@@ -21,13 +25,17 @@ export const Model = ({ onClose }: { onClose: () => void }) => {
             <div className="bg-white p-6 rounded-lg">
                 <h3 className="text-lg font-semibold mb-4">Add New Entry</h3>
                 <p className="text-muted-foreground">
-                    Fill in the details to add a new entry.
+                    {entry ? 'Update your entry below:' : 'Fill in the details for your new entry:'}
                 </p>
                 <form 
                 className="flex flex-col gap-2 mt-4"
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                     e.preventDefault();
-                    createEntry(form.title, form.stime, form.etime, form.weekdays);
+                    if(entry) {
+                        await upsertEntry(form.title, form.stime, form.etime, form.weekdays, entry.id)
+                    } else {
+                        await upsertEntry(form.title, form.stime, form.etime, form.weekdays);
+                    }
                     onClose();
                 }}
                 >
@@ -69,7 +77,7 @@ export const Model = ({ onClose }: { onClose: () => void }) => {
                         </div>
                     </div>
                     <button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md">
-                        Add Entry
+                        {entry ? 'Update Entry' : 'Add Entry'}
                     </button>
                 </form>
                 <button onClick={onClose} className="mt-4 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md">
