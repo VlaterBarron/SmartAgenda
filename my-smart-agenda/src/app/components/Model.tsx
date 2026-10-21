@@ -19,6 +19,12 @@ export const Model = ({ onClose, entry }: {
         etime: entry ? entry.etime : '00:05',
         weekdays: entry ? entry.weekdays : [] as Weekday[],
     });
+    const [error, setError] = useState({
+        titleError: '',
+        stimeError: '',
+        etimeError: '',
+        weekdaysError: ''
+    });
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
@@ -31,12 +37,23 @@ export const Model = ({ onClose, entry }: {
                 className="flex flex-col gap-2 mt-4"
                 onSubmit={async (e) => {
                     e.preventDefault();
-                    if(entry) {
-                        await upsertEntry(form.title, form.stime, form.etime, form.weekdays, entry.id)
+                    if(!form.title || !form.stime || !form.etime || !form.weekdays){
+                        setError(eform => ({
+                            ...eform,
+                            titleError: !form.title ? 'Title is required' : '',
+                            stimeError: !form.stime ? 'Start time is required' : '',
+                            etimeError: !form.etime ? 'End time is required' : '',
+                            weekdaysError: !form.weekdays.length ? 'At least one weekday is required' : ''
+                        }));
                     } else {
-                        await upsertEntry(form.title, form.stime, form.etime, form.weekdays);
+                        if(entry) {
+                            await upsertEntry(form.title, form.stime, form.etime, form.weekdays, entry.id)
+                        } else {
+                            await upsertEntry(form.title, form.stime, form.etime, form.weekdays);
+                        }
+                        onClose();
                     }
-                    onClose();
+                    
                 }}
                 >
                     <input
@@ -46,6 +63,7 @@ export const Model = ({ onClose, entry }: {
                         onChange={(e) => setForm({ ...form, title: e.target.value })}
                         className="border border-input bg-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     />
+                    <div className="text-sm text-destructive">{error.titleError}</div>
                     <div className="flex gap-2">
                         <input
                             type="time"
@@ -53,12 +71,14 @@ export const Model = ({ onClose, entry }: {
                             onChange={(e) => setForm({ ...form, stime: e.target.value })}
                             className="border border-input bg-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         />
+                        <div className="text-sm text-destructive">{error.stimeError}</div>
                         <input
                             type="time"
                             value={form.etime}
                             onChange={(e) => setForm({ ...form, etime: e.target.value })}
                             className="border border-input bg-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                         />
+                        <div className="text-sm text-destructive">{error.etimeError}</div>
                         <div className="flex gap-2">
                             {
                             weekdays.map((day) => (
@@ -75,6 +95,7 @@ export const Model = ({ onClose, entry }: {
                             ))
                         }
                         </div>
+                        <div className="text-sm text-destructive">{error.weekdaysError}</div>
                     </div>
                     <button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md">
                         {entry ? 'Update Entry' : 'Add Entry'}

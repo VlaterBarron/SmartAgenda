@@ -9,6 +9,9 @@ export const getEntries = async (weekday:Weekday) : Promise<Entry[]> => {
 }
 
 export const upsertEntry = async (title:string, stime:string, etime:string, weekdays: Weekday[], id?:string, ) => {
+
+    if(!title || !stime || !etime || weekdays.length === 0) return;
+
     const entry = await prisma.entry.upsert({
         create: {
             title: title,
